@@ -1,0 +1,16 @@
+	1) What is Linked list?
+A linked list its a linear data structures where elements are connected using pointers
+	2)Why linked list?
+Linked list has a dynamic memory allocation, which aloow us to add and rempve easily than array.
+	3)What does O(1) mean?
+The execution time does not depend on data size(Constnant time)
+	4)What does O(n) mean?
+The execution time is directly proportional to the size of the data
+	5)What does O(n^2) mean?
+The execution time is proportional to the square of the data, mostly in nested loops
+	6)What does O(log n) mean?
+The execution time proporitonally increase, size doubles in every step
+	7)What does O(n log n) mean?
+Mostly used in sorting, scan every element in list
+	
+	

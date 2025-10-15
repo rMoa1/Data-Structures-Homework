@@ -1,0 +1,40 @@
+	1) How to add an element end of double linked list?
+void insertEndDouble(int data) {
+    struct Node *newNode = createNode(data);
+    struct Node *last = head;
+    while (last->next != NULL) {
+        last = last->next;
+    }
+    last->next = newNode;
+    newNode->prev = last;    
+    // newNode->next 
+}
+	2)How you can delete all the elements of a linked list? (Write it as recursive)
+void recursiveDeleteAll(struct Node* current){
+if(current == NULL) {
+	return;
+	}
+recursiveDeleteAll(current ->next);
+free(current);
+}
+	3)How you can add an element between elements at double linked list?
+void insertBetween(struct Node *head, int key, int data) {
+    struct Node *A = head;   
+    if (A == NULL) {
+        return;
+    }    
+    while (A != NULL && A->data != key) {
+        A = A->next;
+    }
+    struct Node *N = createNode(data);
+    struct Node *B = A->next;
+    N->next = B;
+    N->prev = A;
+    A->next = N;
+    }
+}
+
+	4)Figure out the difference between circular linked list and linked list. Write it and check the difference with sorting algorithms.
+The main difference is how the list ends
+in linked list at the end of the list a pointer shows NULL
+In circular linked list a pointer shows the first element(head)
