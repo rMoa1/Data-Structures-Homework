@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct AdjNode {
+    int dest;
+    struct AdjNode* next;
+};
+
+struct Graph {
+    int num_vertices;
+    struct AdjNode* array[100]; 
+    int visited[100];           
+    int component_id[100];      
+};
+
+
+struct AdjNode* createNode(int dest) {
+    struct AdjNode* newNode = (struct AdjNode*)malloc(sizeof(struct AdjNode));
+    if (newNode == NULL) {
+        perror("Error in memory allocation");
+        exit(EXIT_FAILURE);
+    }
+    newNode->dest = dest;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Инициализация графа
+struct Graph* createGraph(int num_vertices) {
+    if (num_vertices > 100) {
+        fprintf(stderr, "Error: the limit is 100  ");
+        exit(EXIT_FAILURE);
+    }
+
+    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    if (graph == NULL) {
+        perror("Error in memory allocation");
+        exit(EXIT_FAILURE);
+    }
+    graph->num_vertices = num_vertices;
+
+    for (int i = 0; i < num_vertices; ++i) {
+        graph->array[i] = NULL;
+        graph->visited[i] = 0;
+        graph->component_id[i] = -1;
+    }
+    return graph;
+}
+
+
+void addEdge(struct Graph* graph, int src, int dest) {
+    struct AdjNode* newNode = createNode(dest);
+    newNode->next = graph->array[src];
+    graph->array[src] = newNode;
+    newNode = createNode(src);
+    newNode->next = graph->array[dest];
+    graph->array[dest] = newNode;
+}
+
+void DFS(struct Graph* graph, int vertex_index, int current_component_id) {
+    graph->visited[vertex_index] = 1;
+    graph->component_id[vertex_index] = current_component_id;
+
+    struct AdjNode* temp = graph->array[vertex_index];
+    while (temp != NULL) {
+        int adjacent_index = temp->dest;
+        
+        if (graph->visited[adjacent_index] == 0) {
+            DFS(graph, adjacent_index, current_component_id);
+        }
+        temp = temp->next;
+    }
+}
+
+void findConnectedComponents(struct Graph* graph) {
+    int component_count = 0;
+    for (int i = 0; i < graph->num_vertices; i++) {
+        if (graph->visited[i] == 0) {
+            
+            printf("--- New component was found (ID: %d) ---\n", component_count);
+            DFS(graph, i, component_count);
+            component_count++;
+        }
+    }
+
+    printf("\n## the result of clasterization##\n");
+    printf("There are : %d was found \n", component_count);
+    
+    for (int id = 0; id < component_count; id++) {
+        printf("Comnponent %d:", id);
+        for (int i = 0; i < graph->num_vertices; i++) {
+            if (graph->component_id[i] == id) {
+                printf(" V%d", i + 1); 
+            }
+        }
+        printf("\n");
+    }
+}
+
+void freeGraph(struct Graph* graph) {
+    for (int i = 0; i < graph->num_vertices; i++) {
+        struct AdjNode *current = graph->array[i];
+        struct AdjNode *next;
+        while (current != NULL) {
+            next = current->next;
+            free(current);
+            current = next;
+        }
+    }
+    free(graph);
+}
+
+int main() {
+    int num_vertices = 9; 
+    struct Graph* graph = createGraph(num_vertices);
+
+    //using the graph from the picture in the folder(left side v1 - v5)
+    addEdge(graph, 0, 1); // V1 - V2
+    addEdge(graph, 1, 2); // V2 - V3
+    addEdge(graph, 1, 3); // V2 - V4
+    addEdge(graph, 2, 3); // V3 - V4
+    addEdge(graph, 2, 4); // V3 - V5
+    addEdge(graph, 3, 4); // V4 - V5
+    
+    //right side v6-v7
+    addEdge(graph, 5, 6); // V6 - V7
+    addEdge(graph, 6, 7); // V7 - V8
+    addEdge(graph, 7, 8); // V8 - V9
+    addEdge(graph, 5, 8); // V6 - V9
+    addEdge(graph, 6, 8); // V7 - V9
+
+    findConnectedComponents(graph);
+    
+    freeGraph(graph);
+    
+    return 0;
+}
+2310213529 Roman Semyonov
