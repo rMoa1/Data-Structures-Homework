@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+struct Node { // creating node
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+void inorder(Node* root) { // in ordee
+    if (!root) return;
+    inorder(root->left);
+    std::cout << root->data << " ";
+    inorder(root->right);
+}
+
+Node* insert(Node* root, int val) { //insert
+    if (!root) return new Node(val);
+    if (val < root->data) root->left = insert(root->left, val);
+    else root->right = insert(root->right, val);
+    return root;
+}
+
+Node* remove(Node* root, int val) { //remove
+    if (!root) return root;
+    if (val < root->data) root->left = remove(root->left, val);
+    else if (val > root->data) root->right = remove(root->right, val);
+    else {
+        if (!root->left) {
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        } else if (!root->right) {
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
+        Node* temp = minValueNode(root->right);
+        root->data = temp->data;
+        root->right = remove(root->right, temp->data);
+    }
+    return root;
+}
