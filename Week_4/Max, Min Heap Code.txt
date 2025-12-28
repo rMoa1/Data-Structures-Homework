@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void max_heapify(int arr[], int n, int i) {
+    int largest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+
+    if (l < n && arr[l] > arr[largest]) largest = l;
+    if (r < n && arr[r] > arr[largest]) largest = r;
+
+    if (largest != i) {
+        swap(&arr[i], &arr[largest]);
+        max_heapify(arr, n, largest);
+    }
+}
+
+void min_heapify(int arr[], int n, int i) {
+    int smallest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+
+    if (l < n && arr[l] < arr[smallest]) smallest = l;
+    if (r < n && arr[r] < arr[smallest]) smallest = r;
+
+    if (smallest != i) {
+        swap(&arr[i], &arr[smallest]);
+        min_heapify(arr, n, smallest);
+    }
+}
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    build_max_heap(arr, n);
+    printf("Max Heap: ");
+    print_heap(arr, n);
+
+    build_min_heap(arr, n);
+    printf("Min Heap: ");
+    print_heap(arr, n);
+
+    return 0;
+}

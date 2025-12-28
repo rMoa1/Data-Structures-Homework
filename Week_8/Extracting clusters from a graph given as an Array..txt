@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void dfs(int node, int n, int adj[n][n], int visited[], int cluster[], int *size) {
+    visited[node] = 1;
+    cluster[(*size)++] = node;
+    for (int i = 0; i < n; i++) {
+        if (adj[node][i] && !visited[i]) {
+            dfs(i, n, adj, visited, cluster, size);
+        }
+    }
+}
+
+void find_clusters(int n, int adj[n][n]) {
+    int visited[n];
+    for (int i = 0; i < n; i++) visited[i] = 0;
+
+    int cluster_count = 0;
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            int cluster[n], size = 0;
+            dfs(i, n, adj, visited, cluster, &size);
+            
+            printf("Cluster %d: ", ++cluster_count);
+            for (int j = 0; j < size; j++) printf("%d ", cluster[j]);
+            printf("\n");
+        }
+    }
+}

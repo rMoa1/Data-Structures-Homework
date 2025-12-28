@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+#define MAX 15
+
+int tree[MAX];
+
+void init() {
+    for (int i = 0; i < MAX; i++) tree[i] = -1;
+}
+
+void set_root(int key) {
+    tree[0] = key;
+}
+
+void set_left(int key, int parent) {
+    int index = (2 * parent) + 1;
+    if (tree[parent] == -1) return;
+    if (index < MAX) tree[index] = key;
+}
+
+void set_right(int key, int parent) {
+    int index = (2 * parent) + 2;
+    if (tree[parent] == -1) return;
+    if (index < MAX) tree[index] = key;
+}
+
+void print_tree() {
+    for (int i = 0; i < MAX; i++) {
+        if (tree[i] != -1) printf("%d ", tree[i]);
+        else printf("- ");
+    }
+    printf("\n");
+}
+
+int main() {
+    init();
+    set_root(10);
+    set_left(20, 0);
+    set_right(30, 0);
+    set_left(40, 1);
+    set_right(50, 1);
+    
+    print_tree();
+    return 0;
+}

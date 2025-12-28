@@ -1,0 +1,43 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+int adj[MAX][MAX], visited[MAX], n;
+
+void dfs(int v) {
+    visited[v] = 1;
+    printf("%d ", v);
+    for (int i = 0; i < n; i++)
+        if (adj[v][i] && !visited[i]) dfs(i);
+}
+
+void bfs(int start) {
+    int q[MAX], f = 0, r = 0, v;
+    for (int i = 0; i < n; i++) visited[i] = 0;
+    
+    q[r++] = start;
+    visited[start] = 1;
+    
+    while (f < r) {
+        v = q[f++];
+        printf("%d ", v);
+        for (int i = 0; i < n; i++) {
+            if (adj[v][i] && !visited[i]) {
+                q[r++] = i;
+                visited[i] = 1;
+            }
+        }
+    }
+}
+
+int main() {
+    n = 4;
+    int edges[4][4] = {{0,1,1,0}, {1,0,0,1}, {1,0,0,1}, {0,1,1,0}};
+    for(int i=0; i<n; i++) for(int j=0; j<n; j++) adj[i][j] = edges[i][j];
+
+    printf("DFS: "); dfs(0);
+    printf("\nBFS: "); bfs(0);
+    return 0;
+}

@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+void insert(struct Node** h, int d) {
+    struct Node *n = malloc(sizeof(struct Node)), *t = *h;
+    n->data = d;
+    if (!*h) { n->next = n; *h = n; return; }
+    while (t->next != *h) t = t->next;
+    t->next = n; n->next = *h;
+}
+
+void traverse(struct Node* h) {
+    if (!h) return;
+    struct Node* t = h;
+    do { printf("%d ", t->data); t = t->next; } while (t != h);
+    printf("\n");
+}
+
+void delete(struct Node** h, int k) {
+    if (!*h) return;
+    struct Node *c = *h, *p = NULL;
+    while (c->data != k) {
+        if (c->next == *h) return;
+        p = c; c = c->next;
+    }
+    if (c->next == *h && !p) { free(c); *h = NULL; return; }
+    if (c == *h) {
+        p = *h;
+        while (p->next != *h) p = p->next;
+        *h = c->next; p->next = *h;
+    } else p->next = c->next;
+    free(c);
+}
+
+int main() {
+    struct Node* h = NULL;
+    insert(&h, 10); insert(&h, 20); insert(&h, 30);
+    traverse(h);
+    delete(&h, 20);
+    traverse(h);
+    return 0;
+}

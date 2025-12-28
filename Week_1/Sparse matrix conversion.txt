@@ -1,0 +1,56 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int row;
+    int col;
+    int value;
+} Element;
+
+typedef struct {
+    int rows;
+    int cols;
+    int count;
+    Element* data;
+} SparseMatrix;
+
+SparseMatrix* create_sparse(int** matrix, int rows, int cols) {
+    int count = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] != 0) count++;
+        }
+    }
+
+    SparseMatrix* sparse = (SparseMatrix*)malloc(sizeof(SparseMatrix));
+    sparse->rows = rows;
+    sparse->cols = cols;
+    sparse->count = count;
+    sparse->data = (Element*)malloc(count * sizeof(Element));
+
+    int k = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] != 0) {
+                sparse->data[k].row = i;
+                sparse->data[k].col = j;
+                sparse->data[k].value = matrix[i][j];
+                k++;
+            }
+        }
+    }
+    return sparse;
+}
+
+void print_sparse(SparseMatrix* sparse) {
+    printf("Row\tCol\tValue\n");
+    for (int i = 0; i < sparse->count; i++) {
+        printf("%d\t%d\t%d\n", sparse->data[i].row, sparse->data[i].col, sparse->data[i].value);
+    }
+}
+
+void free_sparse(SparseMatrix* sparse) {
+    free(sparse->data);
+    free(sparse);
+}
